@@ -1,0 +1,7 @@
+nfs:
+  path: /mnt/primary/k3s/pv
+  server: 192.168.1.220
+storageClass:
+  defaultClass: true
+  name: truenas-nfs
+  reclaimPolicy: Retain
