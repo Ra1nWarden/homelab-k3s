@@ -1,13 +1,15 @@
-## Restore / Reinstall
+# Storage
 
-```bash
-helm repo add nfs-subdir-external-provisioner \
-  https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+Two storage providers configured for the cluster.
 
-helm repo update
+## Storage classes
 
-helm upgrade --install nfs-provisioner \
-  nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
-  -n nfs-provisioner \
-  --create-namespace \
-  -f cluster/storage/nfs-provisioner-values.yaml
+| Class | Default? | Backed by | Use case |
+|---|---|---|---|
+| `truenas-nfs` | yes | TrueNAS NFS export at `192.168.1.220:/mnt/primary/k3s/pv` | Cluster-wide default. Pods can move between nodes. |
+| `local-ssd` | no | Each node's `/mnt/ssd` directory | Opt-in. Pods are pinned to the node where the PV was provisioned. For databases / latency-sensitive stateful workloads. |
+
+## Subdirectories
+
+- [`nfs/`](nfs/) — Helm values + reinstall recipe for `nfs-subdir-external-provisioner`.
+- [`local-ssd/`](local-ssd/) — Manifests + design notes for the `local-ssd` storage class (a second instance of `local-path-provisioner`).

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: local-ssd-provisioner
+  namespace: local-ssd-storage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: local-ssd-provisioner
+  template:
+    metadata:
+      labels:
+        app: local-ssd-provisioner
+    spec:
+      serviceAccountName: local-ssd-provisioner-sa
+      containers:
+        - name: local-ssd-provisioner
+          image: docker.io/rancher/local-path-provisioner:v0.0.36
+          imagePullPolicy: IfNotPresent
+          command:
+            - local-path-provisioner
+            - --debug
+            - start
+            - --config
+            - /etc/config/config.json
+            - --provisioner-name
+            - rancher.io/local-path-ssd
+            - --configmap-name
+            - local-ssd-config
+            - --service-account-name
+            - local-ssd-provisioner-sa
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config/
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: CONFIG_MOUNT_PATH
+              value: /etc/config/
+      volumes:
+        - name: config-volume
+          configMap:
+            name: local-ssd-config
