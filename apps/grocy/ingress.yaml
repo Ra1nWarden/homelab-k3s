@@ -5,6 +5,10 @@ metadata:
   namespace: grocy
 spec:
   ingressClassName: traefik
+  tls:
+    - hosts:
+        - grocy.apps.home.arpa
+      secretName: apps-home-arpa-tls
   rules:
     - host: grocy.apps.home.arpa
       http:
