@@ -13,7 +13,9 @@ This repo tracks my k3s cluster configuration.
 
 1. Storage
 2. Ingress
-3. Namespaces
-4. Apps
+3. Monitoring
+4. Namespaces
+5. Apps
 
 App deployment and TLS notes live in [apps/README.md](apps/README.md).
+Monitoring notes live in [cluster/monitoring/README.md](cluster/monitoring/README.md).

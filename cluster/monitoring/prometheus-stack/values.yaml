@@ -1,0 +1,87 @@
+# Helm values for prometheus-community/kube-prometheus-stack.
+#
+# Install with:
+# helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-stack \
+#   --version 85.0.1 \
+#   -n monitoring --create-namespace \
+#   -f cluster/monitoring/prometheus-stack/values.yaml
+
+cleanPrometheusOperatorObjectNames: true
+
+grafana:
+  enabled: true
+  defaultDashboardsTimezone: America/Los_Angeles
+
+  # Keep the admin password out of git. Create this Secret before installing.
+  # See prometheus-stack/README.md.
+  adminPassword: ""
+  admin:
+    existingSecret: grafana-admin
+    userKey: admin-user
+    passwordKey: admin-password
+
+  persistence:
+    enabled: true
+    type: pvc
+    storageClassName: truenas-nfs
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    hosts:
+      - grafana.apps.home.arpa
+    path: /
+    tls:
+      - secretName: apps-home-arpa-tls
+        hosts:
+          - grafana.apps.home.arpa
+
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: local-ssd
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 2Gi
+
+prometheus:
+  enabled: true
+  ingress:
+    enabled: false
+
+  prometheusSpec:
+    retention: 15d
+    scrapeInterval: 30s
+    evaluationInterval: 30s
+
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: local-ssd
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 10Gi
+
+# k3s does not expose these like a kubeadm cluster does, so leave them off until
+# there is an explicit endpoint to scrape.
+kubeEtcd:
+  enabled: false
+
+kubeControllerManager:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+kubeProxy:
+  enabled: false
