@@ -7,7 +7,7 @@ node-exporter, dashboards, and alert rules.
 
 ## Apply order
 
-1. Storage classes from [`cluster/storage/`](../storage/), especially
+1. Storage classes from [`k3s/cluster/storage/`](../storage/), especially
    `local-ssd`.
 2. Prometheus stack from [`prometheus-stack/`](prometheus-stack/).
 3. App-specific `ServiceMonitor` or `PodMonitor` resources later, when an app

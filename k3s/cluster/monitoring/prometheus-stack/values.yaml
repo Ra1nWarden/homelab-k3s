@@ -4,7 +4,7 @@
 # helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-stack \
 #   --version 85.0.1 \
 #   -n monitoring --create-namespace \
-#   -f cluster/monitoring/prometheus-stack/values.yaml
+#   -f k3s/cluster/monitoring/prometheus-stack/values.yaml
 
 cleanPrometheusOperatorObjectNames: true
 

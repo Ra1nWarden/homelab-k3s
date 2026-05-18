@@ -10,8 +10,8 @@ Use mkcert to create one locally trusted wildcard certificate for app ingresses:
 ```sh
 mkcert -install
 mkcert \
-  -cert-file apps.home.arpa.crt \
-  -key-file apps.home.arpa.key \
+  -cert-file k3s/apps/apps.home.arpa.crt \
+  -key-file k3s/apps/apps.home.arpa.key \
   "*.apps.home.arpa" apps.home.arpa
 ```
 
@@ -32,8 +32,8 @@ namespace that needs HTTPS:
 ```sh
 kubectl create namespace <namespace> --dry-run=client -o yaml | kubectl apply -f -
 kubectl -n <namespace> create secret tls apps-home-arpa-tls \
-  --cert=apps.home.arpa.crt \
-  --key=apps.home.arpa.key \
+  --cert=k3s/apps/apps.home.arpa.crt \
+  --key=k3s/apps/apps.home.arpa.key \
   --dry-run=client -o yaml | kubectl apply -f -
 ```
 

@@ -46,7 +46,7 @@ helm upgrade --install prometheus-stack \
   --version 85.0.1 \
   -n monitoring \
   --create-namespace \
-  -f cluster/monitoring/prometheus-stack/values.yaml
+  -f k3s/cluster/monitoring/prometheus-stack/values.yaml
 ```
 
 ## TLS for Grafana
@@ -55,8 +55,8 @@ Grafana uses the same wildcard TLS pattern as apps:
 
 ```sh
 kubectl -n monitoring create secret tls apps-home-arpa-tls \
-  --cert=apps.home.arpa.crt \
-  --key=apps.home.arpa.key \
+  --cert=k3s/apps/apps.home.arpa.crt \
+  --key=k3s/apps/apps.home.arpa.key \
   --dry-run=client -o yaml | kubectl apply -f -
 ```
 

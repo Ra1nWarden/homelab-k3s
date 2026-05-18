@@ -15,7 +15,7 @@ disable:
 ```
 
 **Why:** disables k3s's bundled `local-path-provisioner` addon. We use
-[`cluster/storage/local-ssd/`](../storage/local-ssd/) as our local
+[`k3s/cluster/storage/local-ssd/`](../storage/local-ssd/) as our local
 storage class instead — better policy (`Retain`), our own path
 (`/mnt/ssd`), no fight with the built-in over default-class status.
 Other addons k3s manages here (`traefik`, `servicelb`, `metrics-server`,
@@ -27,7 +27,7 @@ After editing this file, copy it to each k3s server node and restart k3s:
 
 ```sh
 # Push to the control plane.
-scp cluster/k3s/config.yaml ra1nwarden@192.168.1.223:/tmp/k3s-config.yaml
+scp k3s/cluster/k3s/config.yaml ra1nwarden@192.168.1.223:/tmp/k3s-config.yaml
 ssh ra1nwarden@192.168.1.223 \
   'sudo install -m 0644 -o root -g root /tmp/k3s-config.yaml /etc/rancher/k3s/config.yaml \
    && sudo systemctl restart k3s'
@@ -65,7 +65,7 @@ When the cluster converts to 3-server embedded-etcd HA, k3s reads
 `/etc/rancher/k3s/config.yaml.d/`. The directory pattern grows naturally:
 
 ```
-cluster/k3s/
+k3s/cluster/k3s/
 ├── config.yaml                 # shared across all servers (this file)
 └── config.yaml.d/
     ├── server-control.yaml     # per-node bits (advertise-address, etc.)

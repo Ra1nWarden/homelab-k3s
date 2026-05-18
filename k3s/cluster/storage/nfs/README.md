@@ -10,5 +10,5 @@ helm upgrade --install nfs-provisioner \
   nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
   -n nfs-provisioner \
   --create-namespace \
-  -f cluster/storage/nfs/values.yaml
+  -f k3s/cluster/storage/nfs/values.yaml
 ```

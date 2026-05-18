@@ -118,10 +118,10 @@ The user-facing object. Four things to note:
 
 ```sh
 # Create the namespace first so the namespace-scoped resources don't fail.
-kubectl apply -f cluster/storage/local-ssd/namespace.yaml
+kubectl apply -f k3s/cluster/storage/local-ssd/namespace.yaml
 
 # Then create everything else (the namespace.yaml apply is a no-op).
-kubectl apply -f cluster/storage/local-ssd/
+kubectl apply -f k3s/cluster/storage/local-ssd/
 ```
 
 `kubectl apply -f <dir>/` processes files in alphabetical order with no
@@ -129,7 +129,7 @@ dependency awareness — `configmap.yaml` and `deployment.yaml` are
 attempted before `namespace.yaml` and fail outright if the namespace
 doesn't already exist. Failed creates do *not* retry. The two-step
 apply (namespace first, then everything) avoids the race; alternatively,
-running the single `kubectl apply -f cluster/storage/local-ssd/` twice
+running the single `kubectl apply -f k3s/cluster/storage/local-ssd/` twice
 also works because apply is idempotent.
 
 ## Verify
