@@ -25,10 +25,16 @@ macOS:  ~/Library/Application Support/sops/age/keys.txt
 Linux:  ~/.config/sops/age/keys.txt
 ```
 
-Generate or print the current public recipient:
+Print the public recipient for a local identity:
 
 ```sh
-./scripts/secrets/bootstrap-age.sh
+age-keygen -y "$HOME/Library/Application Support/sops/age/keys.txt"
+```
+
+For Linux:
+
+```sh
+age-keygen -y "${XDG_CONFIG_HOME:-$HOME/.config}/sops/age/keys.txt"
 ```
 
 Never commit the private identity file or any value beginning with:
@@ -58,7 +64,7 @@ export SOPS_AGE_KEY_CMD='op read "op://Private/homelab sops age key/private key"
 
 The `op` CLI must be installed and signed in for that to work.
 
-## Encrypt an Env File
+## Create an Encrypted Env File
 
 Create or edit the local plaintext file. Plaintext env files are ignored by git:
 
@@ -70,37 +76,52 @@ vi proxmox/openclaw/openclaw-lxc.env
 Encrypt it:
 
 ```sh
-./scripts/secrets/encrypt-env.sh \
+sops encrypt --input-type dotenv --output-type dotenv \
+  --filename-override proxmox/openclaw/openclaw-lxc.env.sops \
   proxmox/openclaw/openclaw-lxc.env \
-  proxmox/openclaw/openclaw-lxc.env.sops
+  > proxmox/openclaw/openclaw-lxc.env.sops
 ```
 
 Commit only the `.sops` file.
+
+## Edit Encrypted Files
+
+For normal day-to-day edits, edit through SOPS directly:
+
+```sh
+sops proxmox/openclaw/openclaw-lxc.env.sops
+```
+
+SOPS opens the decrypted content in your editor and re-encrypts it when you
+save and exit.
+
+Set your editor if needed:
+
+```sh
+export EDITOR=vim
+export EDITOR=nano
+export EDITOR="code --wait"
+```
 
 ## Decrypt for Local Use
 
 Decrypt to an ignored plaintext file:
 
 ```sh
-./scripts/secrets/decrypt-env.sh \
+sops decrypt --input-type dotenv --output-type dotenv \
   proxmox/openclaw/openclaw-lxc.env.sops \
-  proxmox/openclaw/openclaw-lxc.env
+  > proxmox/openclaw/openclaw-lxc.env
+chmod 600 proxmox/openclaw/openclaw-lxc.env
 ```
 
-Overwrite an existing plaintext file:
+Because `>` truncates the output file, rerunning the same command overwrites an
+existing plaintext env file.
+
+If you only need to inspect values, print plaintext to stdout instead:
 
 ```sh
-./scripts/secrets/decrypt-env.sh --force \
-  proxmox/openclaw/openclaw-lxc.env.sops \
-  proxmox/openclaw/openclaw-lxc.env
-```
-
-## Edit Encrypted Files
-
-Edit through SOPS so plaintext is re-encrypted on save:
-
-```sh
-sops proxmox/openclaw/openclaw-lxc.env.sops
+sops decrypt --input-type dotenv --output-type dotenv \
+  proxmox/openclaw/openclaw-lxc.env.sops
 ```
 
 ## Use With Proxmox
