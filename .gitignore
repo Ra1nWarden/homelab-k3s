@@ -5,4 +5,5 @@ keys.txt
 *.env
 !*.env.example
 !*.env.sops
+!*.sops.env
 .DS_Store

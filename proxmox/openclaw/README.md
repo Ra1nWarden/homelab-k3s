@@ -59,13 +59,13 @@ OPENCLAW_BACKUP_HOST_DIR=/mnt/pve/truenas-openclaw
 If you use SOPS, edit the encrypted env file directly from the repo root:
 
 ```sh
-sops proxmox/openclaw/openclaw-lxc.env.sops
+sops proxmox/openclaw/openclaw-lxc.sops.env
 ```
 
 Then decrypt locally and stream the plaintext env file to Proxmox:
 
 ```sh
-sops decrypt proxmox/openclaw/openclaw-lxc.env.sops \
+sops decrypt proxmox/openclaw/openclaw-lxc.sops.env \
   | ssh root@<proxmox-ip> 'cat > /root/homelab/proxmox/openclaw/openclaw-lxc.env && chmod 600 /root/homelab/proxmox/openclaw/openclaw-lxc.env'
 ```
 

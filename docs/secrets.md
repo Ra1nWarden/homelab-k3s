@@ -77,9 +77,9 @@ Encrypt it:
 
 ```sh
 sops encrypt --input-type dotenv --output-type dotenv \
-  --filename-override proxmox/openclaw/openclaw-lxc.env.sops \
+  --filename-override proxmox/openclaw/openclaw-lxc.sops.env \
   proxmox/openclaw/openclaw-lxc.env \
-  > proxmox/openclaw/openclaw-lxc.env.sops
+  > proxmox/openclaw/openclaw-lxc.sops.env
 ```
 
 Commit only the `.sops` file.
@@ -89,7 +89,7 @@ Commit only the `.sops` file.
 For normal day-to-day edits, edit through SOPS directly:
 
 ```sh
-sops proxmox/openclaw/openclaw-lxc.env.sops
+sops proxmox/openclaw/openclaw-lxc.sops.env
 ```
 
 SOPS opens the decrypted content in your editor and re-encrypts it when you
@@ -109,7 +109,7 @@ Decrypt to an ignored plaintext file:
 
 ```sh
 sops decrypt --input-type dotenv --output-type dotenv \
-  proxmox/openclaw/openclaw-lxc.env.sops \
+  proxmox/openclaw/openclaw-lxc.sops.env \
   > proxmox/openclaw/openclaw-lxc.env
 chmod 600 proxmox/openclaw/openclaw-lxc.env
 ```
@@ -121,7 +121,7 @@ If you only need to inspect values, print plaintext to stdout instead:
 
 ```sh
 sops decrypt --input-type dotenv --output-type dotenv \
-  proxmox/openclaw/openclaw-lxc.env.sops
+  proxmox/openclaw/openclaw-lxc.sops.env
 ```
 
 ## Use With Proxmox
@@ -132,7 +132,7 @@ stream plaintext to Proxmox.
 Write the env file on Proxmox:
 
 ```sh
-sops decrypt proxmox/openclaw/openclaw-lxc.env.sops \
+sops decrypt proxmox/openclaw/openclaw-lxc.sops.env \
   | ssh root@<proxmox-ip> 'cat > /root/homelab/proxmox/openclaw/openclaw-lxc.env && chmod 600 /root/homelab/proxmox/openclaw/openclaw-lxc.env'
 ```
 
@@ -147,7 +147,7 @@ ssh root@<proxmox-ip> 'cd /root/homelab/proxmox/openclaw && ./create-lxc.sh ./op
 After changing `.sops.yaml`, sync encrypted files with:
 
 ```sh
-sops updatekeys proxmox/openclaw/openclaw-lxc.env.sops
+sops updatekeys proxmox/openclaw/openclaw-lxc.sops.env
 ```
 
 ## Rotate Data Keys
@@ -155,7 +155,7 @@ sops updatekeys proxmox/openclaw/openclaw-lxc.env.sops
 Rotate the SOPS data key:
 
 ```sh
-sops rotate -i proxmox/openclaw/openclaw-lxc.env.sops
+sops rotate -i proxmox/openclaw/openclaw-lxc.sops.env
 ```
 
 ## Recovery Warning
