@@ -36,7 +36,7 @@ backups.
 
 ## Prepare Config
 
-On the Proxmox node, clone or copy this repo, then:
+For local plaintext config, on the Proxmox node clone or copy this repo, then:
 
 ```sh
 cd proxmox/openclaw
@@ -55,6 +55,24 @@ IP_CONFIG=dhcp
 PROXMOX_BACKUP_STORAGE=truenas-backups
 OPENCLAW_BACKUP_HOST_DIR=/mnt/pve/truenas-openclaw
 ```
+
+If you use SOPS, run this from the repo root and commit the encrypted file
+instead:
+
+```sh
+./scripts/secrets/encrypt-env.sh \
+  proxmox/openclaw/openclaw-lxc.env \
+  proxmox/openclaw/openclaw-lxc.env.sops
+```
+
+Then decrypt locally and stream the plaintext env file to Proxmox:
+
+```sh
+sops decrypt proxmox/openclaw/openclaw-lxc.env.sops \
+  | ssh root@<proxmox-ip> 'cat > /root/homelab/proxmox/openclaw/openclaw-lxc.env && chmod 600 /root/homelab/proxmox/openclaw/openclaw-lxc.env'
+```
+
+See `docs/secrets.md` for the full SOPS/age workflow.
 
 If you want a static IP, use:
 

@@ -1,3 +1,8 @@
 *.crt
 *.key
+*.agekey
+keys.txt
+*.env
+!*.env.example
+!*.env.sops
 .DS_Store
