@@ -1,0 +1,6 @@
+openclaw-lxc.env
+*.local
+*.secret
+*.tar
+*.tar.gz
+*.tar.zst
