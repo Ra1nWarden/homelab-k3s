@@ -51,6 +51,7 @@ STORAGE=local-lvm
 SNIPPETS_STORAGE=local
 BRIDGE=vmbr0
 IP_CONFIG=dhcp
+SSH_PUBLIC_KEY_FILE=/root/homelab/proxmox/keys/homelab-admin.pub
 K3S_URL=https://192.168.1.223:6443
 K3S_TOKEN=<redacted>
 ```
