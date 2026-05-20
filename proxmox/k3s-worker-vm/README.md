@@ -25,7 +25,7 @@ For containers, Proxmox uses `pct`; for VMs, it uses `qm`.
 
 ## Files
 
-- `k3s-worker.env.example` - copy to `k3s-worker.env` and edit locally.
+- `k3s-worker.sops.env` - encrypted worker VM config. Edit with SOPS.
 - `create-worker-vm.sh` - creates/reuses the VM template and worker VM.
 - `cloud-init/user-data.tpl` - first-boot package install, `/mnt/ssd` setup,
   and k3s agent join.
@@ -33,15 +33,12 @@ For containers, Proxmox uses `pct`; for VMs, it uses `qm`.
 - `scripts/render-template.sh` - small placeholder renderer for cloud-init
   snippets.
 
-## Prepare Config
+## Prepare Config With SOPS
 
-On the Proxmox node, clone or copy this repo, then:
+Edit the encrypted config from a machine with SOPS and the repo age key:
 
 ```sh
-cd proxmox/k3s-worker-vm
-cp k3s-worker.env.example k3s-worker.env
-vi k3s-worker.env
-chmod 600 k3s-worker.env
+sops proxmox/k3s-worker-vm/k3s-worker.sops.env
 ```
 
 Important values:
@@ -72,20 +69,7 @@ Get the k3s join token from the current server:
 ssh ra1nwarden@192.168.1.223 'sudo cat /var/lib/rancher/k3s/server/node-token'
 ```
 
-Do not commit `k3s-worker.env`; it is ignored by `.gitignore`.
-
-## Optional SOPS Workflow
-
-If you want the worker config encrypted in git, create
-`proxmox/k3s-worker-vm/k3s-worker.sops.env` with SOPS and decrypt it to the
-ignored plaintext env file before running:
-
-```sh
-sops encrypt --input-type dotenv --output-type dotenv \
-  --filename-override proxmox/k3s-worker-vm/k3s-worker.sops.env \
-  proxmox/k3s-worker-vm/k3s-worker.env \
-  > proxmox/k3s-worker-vm/k3s-worker.sops.env
-```
+Then decrypt to the ignored plaintext env file before running the create script:
 
 ```sh
 sops decrypt --input-type dotenv --output-type dotenv \
@@ -94,8 +78,26 @@ sops decrypt --input-type dotenv --output-type dotenv \
 chmod 600 proxmox/k3s-worker-vm/k3s-worker.env
 ```
 
+If you decrypt on your Mac and the repo lives on the Proxmox node, copy the
+plaintext env file over SSH:
+
+```sh
+scp proxmox/k3s-worker-vm/k3s-worker.env \
+  root@<proxmox-ip>:/root/homelab/proxmox/k3s-worker-vm/k3s-worker.env
+ssh root@<proxmox-ip> 'chmod 600 /root/homelab/proxmox/k3s-worker-vm/k3s-worker.env'
+```
+
+Do not commit `k3s-worker.env`; it is ignored by `.gitignore`.
+
 The Proxmox node does not need SOPS if you decrypt on your Mac and copy the
 plaintext env file to the node.
+
+## Inspect Without Editing
+
+```sh
+sops decrypt --input-type dotenv --output-type dotenv \
+  proxmox/k3s-worker-vm/k3s-worker.sops.env
+```
 
 ## Networking
 

@@ -76,9 +76,11 @@ vi proxmox/openclaw/openclaw-lxc.env
 For k3s worker VMs:
 
 ```sh
-cp proxmox/k3s-worker-vm/k3s-worker.env.example proxmox/k3s-worker-vm/k3s-worker.env
-vi proxmox/k3s-worker-vm/k3s-worker.env
+sops proxmox/k3s-worker-vm/k3s-worker.sops.env
 ```
+
+The k3s worker VM config is already committed as an encrypted dotenv file; edit
+it directly with SOPS rather than creating a plaintext example first.
 
 Encrypt it:
 
@@ -131,6 +133,15 @@ sops decrypt --input-type dotenv --output-type dotenv \
   proxmox/openclaw/openclaw-lxc.sops.env
 ```
 
+For k3s worker VMs:
+
+```sh
+sops decrypt --input-type dotenv --output-type dotenv \
+  proxmox/k3s-worker-vm/k3s-worker.sops.env \
+  > proxmox/k3s-worker-vm/k3s-worker.env
+chmod 600 proxmox/k3s-worker-vm/k3s-worker.env
+```
+
 ## Use With Proxmox
 
 The Proxmox node does not need SOPS or age. Decrypt on your Mac, then copy or
@@ -147,6 +158,19 @@ Run the script on Proxmox:
 
 ```sh
 ssh root@<proxmox-ip> 'cd /root/homelab/proxmox/openclaw && ./create-lxc.sh ./openclaw-lxc.env'
+```
+
+For k3s worker VMs, write the env file to Proxmox:
+
+```sh
+sops decrypt proxmox/k3s-worker-vm/k3s-worker.sops.env \
+  | ssh root@<proxmox-ip> 'cat > /root/homelab/proxmox/k3s-worker-vm/k3s-worker.env && chmod 600 /root/homelab/proxmox/k3s-worker-vm/k3s-worker.env'
+```
+
+Then run the script on Proxmox:
+
+```sh
+ssh root@<proxmox-ip> 'cd /root/homelab/proxmox/k3s-worker-vm && ./create-worker-vm.sh ./k3s-worker.env'
 ```
 
 ## Update Recipients
