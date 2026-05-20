@@ -1,0 +1,6 @@
+k3s-worker.env
+*.local
+*.secret
+*.img
+*.qcow2
+*.raw

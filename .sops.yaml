@@ -8,5 +8,7 @@
 creation_rules:
   - path_regex: ^proxmox/openclaw/.*\.sops\.env$
     age: age18hu3kkfzu69kxl7qlud7d4hg8dhpks3jctynleyakujh332xs5mssur2r3
+  - path_regex: ^proxmox/k3s-worker-vm/.*\.sops\.env$
+    age: age18hu3kkfzu69kxl7qlud7d4hg8dhpks3jctynleyakujh332xs5mssur2r3
   - path_regex: ^.*\.sops\.(ya?ml|json|env|ini)$
     age: age18hu3kkfzu69kxl7qlud7d4hg8dhpks3jctynleyakujh332xs5mssur2r3

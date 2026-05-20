@@ -73,6 +73,13 @@ cp proxmox/openclaw/openclaw-lxc.env.example proxmox/openclaw/openclaw-lxc.env
 vi proxmox/openclaw/openclaw-lxc.env
 ```
 
+For k3s worker VMs:
+
+```sh
+cp proxmox/k3s-worker-vm/k3s-worker.env.example proxmox/k3s-worker-vm/k3s-worker.env
+vi proxmox/k3s-worker-vm/k3s-worker.env
+```
+
 Encrypt it:
 
 ```sh
@@ -148,6 +155,12 @@ After changing `.sops.yaml`, sync encrypted files with:
 
 ```sh
 sops updatekeys proxmox/openclaw/openclaw-lxc.sops.env
+```
+
+For k3s worker VM secrets:
+
+```sh
+sops updatekeys proxmox/k3s-worker-vm/k3s-worker.sops.env
 ```
 
 ## Rotate Data Keys
